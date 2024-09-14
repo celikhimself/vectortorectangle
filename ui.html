@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector to Rectangles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --plugin-width: 300px;
+            --plugin-height: 600px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            background-color: #050914;
+            color: #F5F5F8;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            width: var(--plugin-width);
+            height: var(--plugin-height);
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        h2 {
+            color: #F5F5F8;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: left;
+        }
+        ol {
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-left: 20px;
+            font-size: 12px;
+            color: #81819D;
+            line-height: 120%;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #262B35;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #10131E;
+            color: #F5F5F8;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            -moz-appearance: textfield;
+            outline: none;
+        }
+        input[type="number"]:focus {
+            border-color: #262B35;
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"]::placeholder {
+            color: #86878D;
+            font-weight: 400;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+        }
+        p {
+            font-size: 12px;
+            color: #81819D;
+            text-align: left;
+            font-weight: 400;
+            margin: 20px 0 0 0;
+        }
+        p a {
+            color: #81819D;
+            text-decoration: none;
+            font-weight: 400;
+        }
+        p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Vector to Rectangles</h2>
+        <ol>
+            <li>Select the frame you want to apply.</li>
+            <li>Enter the corner radius of rectangles.</li>
+            <li>Press convert.</li>
+        </ol>
+        <input type="number" id="cornerRadius" placeholder="Corner Radius" min="0">
+        <button id="run">Convert</button>
+        <p>Crafted by <a href="https://optima.studio" target="_blank" rel="noopener noreferrer">Optima</a></p>
+    </div>
+
+    <script>
+        const cornerRadiusInput = document.getElementById('cornerRadius');
+        const runButton = document.getElementById('run');
+
+        function convertVectors() {
+            const cornerRadius = Number(cornerRadiusInput.value);
+            parent.postMessage({ pluginMessage: { type: 'run-plugin', cornerRadius } }, '*');
+        }
+
+        runButton.addEventListener('click', convertVectors);
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' && document.activeElement !== cornerRadiusInput) {
+                event.preventDefault();
+                convertVectors();
+            }
+        });
+
+        // Listen for resize messages from Figma
+        window.onmessage = (event) => {
+            if (event.data.pluginMessage && event.data.pluginMessage.type === 'resize') {
+                const { width, height } = event.data.pluginMessage;
+                document.documentElement.style.setProperty('--plugin-width', `${width}px`);
+                document.documentElement.style.setProperty('--plugin-height', `${height}px`);
+            }
+        };
+    </script>
+</body>
+</html>
